@@ -1,17 +1,18 @@
-const express = require("express");
+var express = require("express");
 
 
 // EXPRESS CONFIGURATION
-const app = express();
+var app = express();
 
-const PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 
 // ROUTER
 
-
+require("./app/routes/apiRoutes")(app);
+require("./app/routes/htmlRoutes")(app);
 
 
 // LISTENER
