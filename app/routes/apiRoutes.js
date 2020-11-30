@@ -20,20 +20,6 @@ module.exports = function(app) {
     res.json(data);
   });
 
-  // app.get("/api/notes/:noteData", function(req, res) {
-  //   var chosen = req.params.noteData;
-  
-  //   console.log("chosen", chosen);
-  
-  //   for (var i = 0; i < noteData.length; i++) {
-  //     if (chosen === noteData[i].noteID) {
-  //       return res.json(noteData[i]);
-  //     }
-  //   }
-  
-  //   return res.json(false);
-  // });
-
   app.post("/api/notes", function(req, res) {
       data = fs.readFileSync("data/db.json", "utf-8")
       // console.log("post test", data);
