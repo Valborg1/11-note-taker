@@ -14,7 +14,7 @@ module.exports = function(app) {
     console.log("data", data)
 
     data = data.sort(function (a, b) {
-      return a.noteID.localeCompare(b.noteID);
+      return b.noteID.localeCompare(a.noteID);
   });
   
     res.json(data);
