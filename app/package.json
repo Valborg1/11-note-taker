@@ -1,5 +1,5 @@
 {
-  "name": "11-note-taker",
+  "name": "app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -7,18 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Valborg1/11-note-taker.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Valborg1/11-note-taker/issues"
-  },
-  "homepage": "https://github.com/Valborg1/11-note-taker#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1"
   }
 }

@@ -1,0 +1,46 @@
+button.removeFromList {
+    display: none;
+}
+
+.preview:hover button.removeFromList {
+   display: block;
+}
+
+.preview:hover {
+    cursor: pointer;
+    background-color: #dddddd;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: .5;
+}
+   
+.preview {
+    text-align: center;
+}
+
+.preview {
+    background-color:#f7f7f7;
+    border: white solid 3px;
+    white-space: pre-wrap;
+    border-radius: 15px;
+
+}
+
+.listTitle {
+    border-left: black dashed 1px;
+    padding-top: 5px;
+}
+
+.listDate {
+    padding-top: 13px;
+}
+
+.listDelete {
+    padding-top: 5px;
+}
+
+  
+ 

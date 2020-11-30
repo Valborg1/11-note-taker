@@ -5,13 +5,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Create Notes</title>
+
     <!-- Bootstrap CSS -->
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+   
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  
-    <title>Create Notes</title>
+    
   </head>
   <body>
 
@@ -26,24 +30,14 @@
             <br>
             
             <div class="text-center">
-                <button class="btn btn-lg btn-info" type="button" data-toggle="modal" data-target="#newNoteModal"><span class="fa fa-plus-square"></span> New Note</button>
+                <button id="newNoteBtn" class="btn btn-lg btn-info" type="button" data-toggle="modal" data-target="#newNoteModal"><span class="fa fa-plus-square"></span> New Note</button>
             </div>
         </div>
     </div>
 
     <!-- This is where NOTES will be POPULATED and APPENDED -->
     <div class="container" id="note-history">
-        <div class="row">
-            <div class="col-3">
-                <!-- Time Stamp -->
-            </div>
-            <div class="col-6">
-                <!-- Note Title -->
-            </div>
-            <div class="col-3">
-                <!-- Delete -->
-            </div>
-        </div>
+        
     </div>
 
     <!-- This is the MODAL for adding a new note -->
@@ -60,17 +54,17 @@
             <form>
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="note-title">
+                <input type="text" class="form-control" id="noteTitle">
             </div>
             <div class="form-group">
                 <label for="message-text" class="col-form-label">Note:</label>
-                <textarea class="form-control" id="note-text"></textarea>
+                <textarea class="form-control" style="min-height: 200px" id="noteText"></textarea>
             </div>
             </form>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="save-note">Save Note</button>
+            <button type="button" class="btn btn-primary" id="save-note" data-dismiss="modal">Save Note</button>
         </div>
         </div>
     </div>
@@ -81,22 +75,55 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="savedNoteModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="savedNoteTitle"></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              ...
+              <textarea readonly class="form-control" style="min-height: 200px" id="savedNoteText"></textarea>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button id="editNoteBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editNoteModal" data-dismiss="modal">Edit Note</button>
             </div>
           </div>
         </div>
       </div>
-
+      
+      <!-- This is the MODAL for EDITING a NOTE -->
+      <div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="editNoteModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editNoteModalTitle">Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body">
+                <form>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Title:</label>
+                    <input type="text" class="form-control" id="editNoteTitle">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Note:</label>
+                    <textarea class="form-control" style="min-height: 200px" id="editNoteText"></textarea>
+                </div>
+                </form>
+            </div>
+            </div>
+            <div class="modal-footer" id="footer2">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="save-edit" data-dismiss="modal">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+      <br>
 
     <footer class="footer">
         <div class="container">
@@ -120,15 +147,15 @@
             var noteList = $("#note-history");
 
             var template=
-              `<div class="row">
-                <div class="col-3">
-                    <h3>${noteData[i].timeStamp}</h3>
+              `<div class="row preview" data-toggle="modal" data-target="#savedNoteModal" data-id="${noteData[i].noteID}">
+                <div class="col-2 listDate">
+                    <h5>${noteData[i].timeStamp}</h5>
                 </div>
-                <div class="col-6">
+                <div class="col-9 listTitle">
                     <h3>${noteData[i].noteTitle}</h3>
                 </div>
-                <div class="col-3">
-                    <h3>TEST</h3>
+                <div class="col-1 listDelete">
+                    <button class="btn btn-danger removeFromList"><span class="fa fa-times"></span></button>
                 </div>
               </div>`
 
@@ -141,10 +168,139 @@
     
       runNoteQuery();
     
+      // Create a New Note
+      $("#save-note").on("click", function(e) {
+        e.preventDefault();
+        
+
+        var newNote = {
+          noteID: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          timeStamp: moment().format("MM/DD"),
+          noteTitle: $("#noteTitle").val().trim(),
+          noteText: $("#noteText").val().trim(),
+        };
+
+        function postNewNote() {
+        $.ajax({
+          url: "/api/notes",
+          method: "POST",
+          data: newNote
+        }).then(function(data){
+
+        $("#note-history").text("");
+        
+        runNoteQuery();
+      });
+    }
+    postNewNote(newNote);
+    $("#noteTitle").val("")
+    $("#noteText").val("")
+  })
     
+
+      // Pull Up Saved Notes
+      $("#note-history").on("click", ".preview", function (e){
+        e.preventDefault;
+
+        var id = $(this).attr("data-id")
+        $("#footer").attr("data-id", id);
+
+        $.ajax({
+          url: "/api/notes",
+          method: "GET"
+        }).then(function(noteData){
+
+          var index = noteData.findIndex(x => x.noteID === id);
+
+          console.log(index);
+
+          title = noteData[index].noteTitle;
+          text = noteData[index].noteText;
+
+          $("#savedNoteTitle").text(title);
+          $("#savedNoteText").text(text);
+        })
+      });
+
+      // Delete a Saved Note
+      $("#note-history").on("click", "button.removeFromList", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var id = $(this).parent().parent().attr("data-id")
+
+        $.ajax({
+          method: "DELETE",
+          url: "/api/notes/" + id,
+        }).then(function(res){
+
+        })
+        
+        $("#note-history").text("");
+        
+        runNoteQuery();
+      });
+
+
+      // Edit an Existing Note
+      $("#editNoteBtn").on("click", function (e){
+        e.preventDefault();
+
+        var id = $(this).parent().attr("data-id");
+        $("#footer2").attr("data-id", id);
+
+        $.ajax({
+          url: "/api/notes",
+          method: "GET"
+        }).then(function(noteData){
+          var index = noteData.findIndex(x => x.noteID === id);
+
+          title = noteData[index].noteTitle;
+          text = noteData[index].noteText;
+
+          $("#editNoteTitle").val(title);
+          $("#editNoteText").val(text);
+
+        })
+      })
+
+      // Save Edits to Note
+      $("#save-edit").on("click", function (e){
+        e.preventDefault();
+
+        var id = $(this).parent().attr("data-id");
+
+        var newNote = {
+          noteID: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          timeStamp: moment().format("MM/DD"),
+          noteTitle: $("#editNoteTitle").val().trim(),
+          noteText: $("#editNoteText").val().trim(),
+        };
+
+        function patchNote(newNote) {
+        $.ajax({
+          method: "PATCH",
+          url: "/api/notes/" + id,
+          data: newNote
+        }).then(function(res){
+        
+          $("#note-history").text("");
+        
+          runNoteQuery();
+        })
+      }
+      patchNote(newNote);
+      })
+    
+
+
+
+     
+
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
   </body>
 </html>
