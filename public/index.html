@@ -175,7 +175,7 @@
         
 
         var newNote = {
-          noteID: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          noteID: moment().format('MMMM Do YYYY, HH:mm:ss a'),
           timeStamp: moment().format("MM/DD"),
           noteTitle: $("#noteTitle").val().trim(),
           noteText: $("#noteText").val().trim(),
@@ -272,7 +272,7 @@
         var id = $(this).parent().attr("data-id");
 
         var newNote = {
-          noteID: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          noteID: moment().format('MMMM Do YYYY, HH:mm:ss a'),
           timeStamp: moment().format("MM/DD"),
           noteTitle: $("#editNoteTitle").val().trim(),
           noteText: $("#editNoteText").val().trim(),
